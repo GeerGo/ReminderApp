@@ -47,9 +47,6 @@ public class ReminderApp extends JFrame {
     private JTable table_1;
 
     private JLabel lblTimer;
-    private JFileChooser fc;
-    private File directory;
-    private File file;
 
     /**
      * Launch the application.
@@ -313,44 +310,6 @@ public class ReminderApp extends JFrame {
         if (table_1.getRowCount() > 0) {
             for (int i = table_1.getRowCount() - 1; i > -1; i--) {
                 model.removeRow(i);
-            }
-        }
-    }
-
-    private void displayInTable() {
-        InputStream is = null;
-        fc = new JFileChooser(directory);
-        int option = fc.showOpenDialog(rootPane);
-        if (option == JFileChooser.APPROVE_OPTION) {
-            file = fc.getSelectedFile();
-            directory = fc.getCurrentDirectory();
-            try {
-                File f = file;
-                is = new FileInputStream(f);
-                Scanner scan = new Scanner(is);
-                String[] arr;
-                while (scan.hasNextLine()) {
-                    String line = scan.nextLine();
-                    if (line.indexOf(",") > 1) {
-                        arr = ",".split(line);
-                    } else {
-                        arr = "\n".split(line);
-                    }
-                    Object[] data = new Object[arr.length];
-                    System.arraycopy(arr, 0, data, 0, data.length);
-                    DefaultTableModel model = (DefaultTableModel) table_1.getModel();
-                    model.addRow(data);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (is != null) {
-                        is.close();
-                    }
-                } catch (Exception ignored) {
-
-                }
             }
         }
     }
