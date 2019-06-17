@@ -6,11 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,7 +35,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
@@ -58,18 +54,6 @@ public class ReminderApp extends JFrame {
     /**
      * Launch the application.
      */
-
-
-    private String getExtention() {
-        String ext = "";
-        String extension = fc.getFileFilter().getDescription();
-        if (extension.equals("*.txt")) {
-            ext = ".txt";
-        }
-        return ext;
-    }
-
-
     public static void main(String[] args) {
         // Run the program
         EventQueue.invokeLater(() -> {
@@ -92,12 +76,11 @@ public class ReminderApp extends JFrame {
         setLocationRelativeTo(null);
         setTitle("Reminder");
 
-        // Create menu bar at the top with three options: "File", "Home", and "Help"
+        // Create menu bar at the top with "Exit" and "Help"
         JMenuBar menuBar = new JMenuBar();
         menuBar.setBackground(Color.WHITE);
         setJMenuBar(menuBar);
 
-        // Create
         final JMenuItem itmExit = new JMenuItem("Exit");
         itmExit.addActionListener(arg0 -> {
             if (arg0.getSource() == itmExit) {
@@ -107,45 +90,6 @@ public class ReminderApp extends JFrame {
                     System.out.println(x);
                     System.exit(0);
                 }
-            }
-        });
-
-        JMenuItem itmSave = new JMenuItem("Save");
-        itmSave.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                fc = new JFileChooser(directory);
-                // add file filter
-                FileNameExtensionFilter filter;
-                filter = new FileNameExtensionFilter("*.txt", "txt");
-                fc.addChoosableFileFilter(filter);
-                int option = fc.showSaveDialog(rootPane);
-                if (option == JFileChooser.APPROVE_OPTION) {
-                    directory = fc.getCurrentDirectory();
-
-                    file = fc.getSelectedFile();
-                    try {
-                        writeAll();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-
-            private void writeAll() throws IOException {
-                try (BufferedWriter bw = new BufferedWriter(new FileWriter(file + getExtention(), false))) {
-
-                    for (int i = 0; i < table_1.getRowCount(); i++) {
-                        for (int j = 0; j < table_1.getColumnCount(); j++) {
-                            bw.write((String) table_1.getModel().getValueAt(i, j) + " , ");
-                        }
-                        bw.write("\r\n");
-                    }
-                    bw.write("\n");
-                    JOptionPane.showMessageDialog(rootPane, "Data saved !");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
             }
         });
 
@@ -308,7 +252,7 @@ public class ReminderApp extends JFrame {
 
         JButton btnNewButton_2 = new JButton("Clear");
         btnNewButton_2.addActionListener(arg0 -> clear());
-        btnNewButton_2.setBounds(177, 21, 89, 23);
+        btnNewButton_2.setBounds(33, 21, 89, 23);
         panel.add(btnNewButton_2);
 
         JButton btnNewButton_3 = new JButton("Delete");
@@ -326,11 +270,6 @@ public class ReminderApp extends JFrame {
         });
         btnNewButton_3.setBounds(311, 21, 89, 23);
         panel.add(btnNewButton_3);
-
-        JButton btnOpen = new JButton("Open");
-        btnOpen.addActionListener(e -> displayInTable());
-        btnOpen.setBounds(33, 21, 89, 23);
-        panel.add(btnOpen);
         recentEventPanel.setLayout(gl_recentEventPanel);
 
         JPanel panel_1 = new JPanel();
